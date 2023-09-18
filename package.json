@@ -4,12 +4,14 @@
   "description": "This is the second node-curse",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev:1": "nodemon 1.http.js",
+    "dev:2": "nodemon 2.routing.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "nodemon": "^3.0.1",
     "standard": "^17.1.0"
   },
   "eslintConfig": {
