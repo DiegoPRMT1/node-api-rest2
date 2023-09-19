@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "dev:1": "nodemon 1.http.js",
-    "dev:2": "nodemon 2.routing.js"
+    "dev:2": "nodemon 2.routing.js",
+    "dev:3": "node --watch 3.express.js"
   },
   "keywords": [],
   "author": "",
@@ -16,5 +17,8 @@
   },
   "eslintConfig": {
     "extends": "standard"
+  },
+  "dependencies": {
+    "express": "4.18.2"
   }
 }
