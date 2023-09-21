@@ -1,6 +1,7 @@
 const express = require('express')
-const movies = require('./movies.json')
 const crypto = require('node:crypto')
+const cors = require('cors')
+const movies = require('./movies.json')
 const { validateMovie, validatePartialMovie } = require('./schemas/movies.js')
 // Crypto es una libreria nativa de nodejs que crear ids
 const PORT = process.env.PORT ?? 3000
@@ -8,6 +9,29 @@ const PORT = process.env.PORT ?? 3000
 const app = express()
 // parsea nuestro json y junta los chuncks
 app.use(express.json())
+// esto acepta todo si no quieres que acepte todo
+app.use(cors())
+// si quieres que acepte solo lo que tu quieras
+// app.use(cors({
+//   origin: (origin, callback) => {
+//     const ACCEPTED_ORIGINS = [
+//       'http://localhost:8080',
+//       'http://localhost:1234',
+//       'https://movies.com',
+//       'https://midu.dev'
+//     ]
+
+//     if (ACCEPTED_ORIGINS.includes(origin)) {
+//       return callback(null, true)
+//     }
+
+//     if (!origin) {
+//       return callback(null, true)
+//     }
+
+//     return callback(new Error('Not allowed by CORS'))
+//   }
+// }))
 app.disable('x-powered-by')
 
 app.get('/', (req, res) => {
@@ -19,6 +43,14 @@ app.get('/', (req, res) => {
 //   res.json(movies)
 // })
 
+// Supongamos que quieres aceptar el crossorigin desde diferentes paginas
+// const ACCEPTED_ORIGINS = [
+//   'http://localhost:8080',
+//   'http://localhost:3000',
+//   'http://localhost:8081',
+//   'http://movies_some.com',
+//   'http://192.168.1.176:8080'
+// ]
 // End point con filtros
 app.get('/movies', (req, res) => {
   const { genre } = req.query
@@ -111,6 +143,20 @@ app.patch('/movies/:id', (req, res) => {
 
   movies[movieIndex] = updateMovie
   return res.json(updateMovie)
+})
+
+// BORRAMOS PELICULAS CON DELETE
+app.delete('/movies/:id', (req, res) => {
+  const { id } = req.params
+  const movieIndex = movies.findIndex(movie => movie.id === id)
+
+  if (movieIndex === -1) {
+    return res.status(404).json({ message: 'Movie not found' })
+  }
+
+  movies.splice(movieIndex, 1)
+
+  return res.json({ message: 'Movie deleted' })
 })
 
 app.listen(PORT, () => {
